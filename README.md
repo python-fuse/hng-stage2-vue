@@ -1,6 +1,6 @@
-# Ticketly - Ticket Management Web Application
+# Ticketly - Vue 3 Ticket Management System
 
-A modern, responsive ticket management application built with React, TypeScript, and Tailwind CSS. This application provides a complete solution for managing tickets with authentication, dashboard analytics, and full CRUD operations.
+A modern, responsive ticket management application built with Vue 3, TypeScript, and Tailwind CSS. This is a **carbon copy migration** from the original React implementation, maintaining exact feature parity and user experience.
 
 ## 🚀 Features
 
@@ -27,74 +27,41 @@ A modern, responsive ticket management application built with React, TypeScript,
 - ✅ Accessibility compliance with semantic HTML
 - ✅ Error handling for all scenarios
 
-## 🛠️ Technologies Used
+## � Tech Stack
 
-### Core Framework
-
-- **React 19.2.0** - Main UI framework
-- **TypeScript 5.9.3** - Type safety and developer experience
-- **Vite 7.1.12** - Build tool and development server
-
-### Styling & UI Components
-
+- **Vue 3.5.22** - Progressive JavaScript framework with Composition API
+- **TypeScript 5.9.3** - Type-safe development
+- **Pinia 3.0.3** - Official Vue state management library
+- **Vue Router 4.6.3** - Client-side routing with navigation guards
+- **shadcn-vue** - High-quality, accessible UI components
 - **Tailwind CSS 4.1.16** - Utility-first CSS framework
-- **shadcn/ui Components** - Pre-built accessible UI components
-- **Lucide React 0.546.0** - Icon library
-- **Class Variance Authority** - Component variant management
-
-### Routing & Navigation
-
-- **React Router DOM 7.9.4** - Client-side routing and navigation
-
-### Forms & Validation
-
-- **React Hook Form 7.65.0** - Form state management
-- **Zod 4.1.12** - Schema validation
-- **@hookform/resolvers** - Integration between React Hook Form and Zod
-
-### State Management
-
-- **React Context API** - Global state for authentication and tickets
-- **localStorage** - Data persistence
-
-### User Experience
-
-- **Sonner 2.0.7** - Toast notifications
-- **Next Themes 0.4.6** - Theme management support
-
-### Development Tools
-
-- **ESLint** - Code linting and quality
-- **TypeScript ESLint** - TypeScript-specific linting rules
+- **vue-sonner 2.x** - Beautiful toast notifications
+- **Vite 7.1.12** - Next-generation frontend tooling
 
 ## 🚀 Setup Instructions
 
 ### Prerequisites
 
 - Node.js (version 16 or higher)
-- npm or pnpm package manager
+- pnpm package manager
 
 ### Installation
 
 1. **Clone or download the project**
 
    ```bash
-   cd /path/to/stage2-react
+   cd /path/to/stage2-vue
    ```
 
 2. **Install dependencies**
 
    ```bash
-   npm install
-   # or
    pnpm install
    ```
 
 3. **Start the development server**
 
    ```bash
-   npm run dev
-   # or
    pnpm dev
    ```
 
@@ -105,16 +72,12 @@ A modern, responsive ticket management application built with React, TypeScript,
 ### Build for Production
 
 ```bash
-npm run build
-# or
 pnpm build
 ```
 
 ### Preview Production Build
 
 ```bash
-npm run preview
-# or
 pnpm preview
 ```
 
@@ -122,68 +85,122 @@ pnpm preview
 
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── forms/          # Form components (CreateTicketForm, EditTicketForm)
-│   ├── layout/         # Layout components (AppLayout, Sidebar, Footer)
-│   └── ui/             # shadcn/ui components and custom UI elements
-├── context/            # React Context providers
-│   ├── AuthContext.tsx # Authentication state management
-│   ├── TicketContext.tsx # Ticket data management
-│   └── AppProviders.tsx # Combined context providers
-├── pages/              # Page components
-│   ├── LandingPage.tsx # Marketing/landing page
-│   ├── LoginPage.tsx   # User login
-│   ├── SignupPage.tsx  # User registration
-│   ├── Dashboard.tsx   # Main dashboard
-│   └── TicketManagement.tsx # Ticket CRUD interface
-├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-└── lib/                # Shared libraries and configurations
+├── components/
+│   ├── forms/
+│   │   ├── CreateTicketForm.vue    # Create ticket modal
+│   │   └── EditTicketForm.vue      # Edit ticket modal
+│   ├── layout/
+│   │   ├── AppLayout.vue           # Main app layout wrapper
+│   │   ├── Sidebar.vue             # Responsive sidebar (desktop/mobile)
+│   │   └── Footer.vue              # Footer component
+│   └── ui/
+│       ├── StatusBadge.vue         # Ticket status badge
+│       ├── WaveBackground.vue      # SVG wave decoration
+│       ├── DecorativeCircle.vue    # Floating circles
+│       └── [shadcn components]     # UI primitives
+├── composables/
+│   └── useToast.ts                 # Toast notification wrapper
+├── stores/
+│   ├── auth.ts                     # Pinia auth store
+│   └── tickets.ts                  # Pinia tickets store
+├── router/
+│   └── index.ts                    # Vue Router configuration
+├── types/
+│   └── index.ts                    # TypeScript type definitions
+├── utils/
+│   └── statusColors.ts             # Status color mappings
+├── views/
+│   ├── LandingPage.vue             # Public landing page
+│   ├── LoginPage.vue               # Login form
+│   ├── SignupPage.vue              # Signup form
+│   ├── Dashboard.vue               # Dashboard with stats
+│   └── TicketManagement.vue        # Ticket CRUD interface
+└── main.ts                         # Application entry point
 ```
 
-## 🎨 UI Components Architecture
+## 🔄 Migration Notes from React
 
-### Layout Components
+This Vue implementation maintains **exact feature parity** with the React version:
 
-- **AppLayout**: Wrapper component that includes sidebar navigation
-- **Sidebar**: Responsive navigation with desktop/mobile variants
-- **Footer**: Consistent footer across all pages
+### Key Equivalences:
 
-### Form Components
+- React Context API → Pinia Stores
+- `useState` / `useEffect` → `ref` / `reactive` / `onMounted`
+- `createContext` → `defineStore`
+- React Router → Vue Router
+- Props drilling → Props with TypeScript interfaces
+- `className` → `class`
+- Event handlers: `onClick` → `@click`
 
-- **CreateTicketForm**: Modal form for creating new tickets
-- **EditTicketForm**: Modal form for updating existing tickets
-- **Validation**: Real-time validation with error messages
+### Validation Rules (Identical):
 
-### UI Components (shadcn/ui)
+- Title: Required, 3-100 characters
+- Description: Optional, max 500 characters
+- Status: Required, one of: open/in_progress/closed
+- Priority: Optional, one of: low/medium/high
+- Email: Required, valid email format
+- Password: Required, min 6 characters
+- Name: Required, min 2 characters
 
-- **Button**: Various button variants and sizes
-- **Card**: Container component for content sections
-- **Input**: Form input fields with validation states
-- **Sheet**: Mobile slide-out navigation
-- **Badge**: Status indicators for tickets
-- **Toast**: Notification system via Sonner
+### Toast Messages (Exact Matches):
 
-### Custom Components
+- "Account created successfully! Welcome to Ticketly!"
+- "Welcome back to Ticketly!"
+- "Invalid email or password. Please check your credentials and try again."
+- "Email already exists. Please use a different email or login."
+- "Ticket created successfully!"
+- "Ticket updated successfully!"
+- "Ticket deleted successfully!"
+- "Please fix the errors below"
 
-- **WaveBackground**: SVG wave pattern for hero section
-- **DecorativeCircle**: Floating decorative elements
-- **ProtectedRoute**: Route guard for authenticated pages
+### Data Formats (Identical):
+
+**User Object:**
+
+```typescript
+{
+  id: string; // Format: "user_" + timestamp
+  name: string;
+  email: string;
+  password: string;
+}
+```
+
+**Ticket Object:**
+
+```typescript
+{
+  id: string                                    // Format: "ticket_" + timestamp + "_" + random
+  title: string                                 // 3-100 characters
+  description?: string                          // Max 500 characters
+  status: 'open' | 'in_progress' | 'closed'
+  priority?: 'low' | 'medium' | 'high'
+  createdBy: string                             // User ID
+  createdAt: string                             // ISO date string
+  updatedAt: string                             // ISO date string
+}
+```
+
+**Session Token:**
+
+```typescript
+string; // Format: "token_" + timestamp + "_" + random
+```
 
 ## 🔐 State Management
 
-### Authentication Context (`AuthContext`)
+### Authentication Store (`stores/auth.ts`)
 
 - **User State**: Current logged-in user information
 - **Session Management**: localStorage-based session tokens
-- **Methods**: `login()`, `signup()`, `logout()`
+- **Actions**: `login()`, `signup()`, `logout()`, `initializeAuth()`
 - **Data**: Stored in `ticketapp_session`, `ticketapp_user`, `ticketapp_users`
 
-### Ticket Context (`TicketContext`)
+### Ticket Store (`stores/tickets.ts`)
 
-- **Ticket State**: Array of all tickets
-- **CRUD Operations**: `addTicket()`, `updateTicket()`, `deleteTicket()`
-- **Statistics**: `getTicketStats()` for dashboard metrics
+- **Ticket State**: Reactive array of all tickets
+- **CRUD Actions**: `addTicket()`, `updateTicket()`, `deleteTicket()`, `loadTickets()`
+- **Getters**: `getTicketStats()` for dashboard metrics
 - **Data**: Persisted in `ticketapp_tickets` localStorage key
 
 ### Data Persistence
@@ -302,65 +319,57 @@ For testing purposes, you can use these credentials or create new accounts:
 - Toast notifications for system-level errors
 - Graceful fallbacks for failed operations
 
-## 🔧 Known Issues & Limitations
+## � Known Limitations
 
-### Data Persistence
-
-- Uses localStorage instead of a real database
-- Data is limited to single browser/device
-- No data synchronization across devices
-
-### Authentication
-
-- Session tokens are simple strings, not JWT
+- No backend integration (localStorage only)
+- No user avatar/profile images
+- No ticket attachments
+- No real-time collaboration
+- No email notifications
 - No password reset functionality
-- No email verification process
+- No pagination (all tickets loaded at once)
 
-### Performance
+## 🔮 Future Enhancements
 
-- No pagination for large ticket lists
-- All data loaded into memory at once
-- No image optimization for decorative elements
+- [ ] Backend API integration (REST/GraphQL)
+- [ ] User profile management
+- [ ] Ticket assignment to users
+- [ ] Comments/activity log per ticket
+- [ ] File attachments
+- [ ] Email notifications
+- [ ] Advanced filtering (date ranges, priority)
+- [ ] Sorting options
+- [ ] Export to CSV/PDF
+- [ ] Dark mode toggle
+- [ ] Multi-language support
 
-### Browser Support
+## � Development Commands
 
-- Modern browsers only (ES2022+ features)
-- No Internet Explorer support
-- Requires JavaScript to be enabled
+```bash
+# Install new dependencies
+pnpm add <package-name>
 
-## 🔄 Future Enhancements
+# Add shadcn-vue component
+pnpm dlx shadcn-vue@latest add <component-name>
 
-### Potential Improvements
+# Type checking
+pnpm vue-tsc --noEmit
 
-- Real backend API integration
-- JWT-based authentication
-- Data export functionality
-- Drag-and-drop ticket management
-- Real-time notifications
-- Dark mode support
-- Pagination for large datasets
-- Advanced filtering and search
+# Linting
+pnpm eslint src/
+```
 
-### Framework Compatibility
+## 🤝 Contributing
 
-This application is designed to be easily portable to:
+This project is a learning exercise and migration reference. Feel free to:
 
-- **Vue.js**: Component structure maps well to Vue components
-- **Twig/PHP**: Server-side rendering with similar layouts
-- **Other frameworks**: Clean separation of concerns
+- Report bugs via issues
+- Suggest enhancements
+- Submit pull requests for improvements
 
 ## 📄 License
 
 This project is part of the HNG Frontend Stage 2 requirements.
-
-## 🤝 Contributing
-
-This is a learning project for the HNG internship program. Follow the established patterns for:
-
-- Component structure
-- State management
-- Styling conventions
-- TypeScript usage
 
 ---
 

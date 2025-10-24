@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Hero Section - Full width background -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-blue-50 to-indigo-100">
       <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8">
         <div class="text-center w-full">
           <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
