@@ -1,37 +1,80 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="w-full max-w-md mx-auto p-6 bg-white rounded shadow-lg">
-      <h2 class="text-2xl font-bold mb-2">Sign in to your Ticketly account</h2>
-      <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Email</label>
-          <input v-model="state.email" type="email" class="mt-1 block w-full border rounded px-3 py-2" />
-          <p v-if="errors.email" class="text-sm text-red-600">{{ errors.email }}</p>
-        </div>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Welcome back</h1>
+        <p class="text-gray-600 mt-2">Sign in to your Ticketly account</p>
+      </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Password</label>
-          <input v-model="state.password" type="password" class="mt-1 block w-full border rounded px-3 py-2" />
-          <p v-if="errors.password" class="text-sm text-red-600">{{ errors.password }}</p>
-        </div>
+      <Card class="shadow-lg">
+        <CardHeader>
+          <CardTitle class="text-2xl text-center">Login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form @submit.prevent="onSubmit" class="space-y-6">
+            <div>
+              <Label for="email">Email address</Label>
+              <Input
+                id="email"
+                v-model="state.email"
+                type="email"
+                :class="['mt-1', errors.email ? 'border-red-500' : '']"
+                placeholder="Enter your email"
+              />
+              <p v-if="errors.email" class="text-red-600 text-sm mt-1">{{ errors.email }}</p>
+            </div>
 
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded">Sign in</button>
-      </form>
+            <div>
+              <Label for="password">Password</Label>
+              <Input
+                id="password"
+                v-model="state.password"
+                type="password"
+                :class="['mt-1', errors.password ? 'border-red-500' : '']"
+                placeholder="Enter your password"
+              />
+              <p v-if="errors.password" class="text-red-600 text-sm mt-1">{{ errors.password }}</p>
+            </div>
 
-      <p class="mt-4 text-sm">Don't have an account? <router-link to="/auth/signup" class="text-blue-600">Sign up</router-link></p>
+            <Button type="submit" class="w-full" size="lg" :disabled="isLoading">
+              {{ isLoading ? 'Signing in...' : 'Sign in' }}
+            </Button>
+          </form>
+
+          <div class="mt-6 text-center">
+            <p class="text-gray-600">
+              Don't have an account?
+              <router-link to="/auth/signup" class="text-blue-600 hover:text-blue-500 font-medium">
+                Sign up
+              </router-link>
+            </p>
+          </div>
+
+          <div class="mt-4 text-center">
+            <router-link to="/" class="text-gray-500 hover:text-gray-700 text-sm">
+              ← Back to home
+            </router-link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 const router = useRouter()
 const auth = useAuthStore()
 const toast = useToast()
+const isLoading = ref(false)
 
 auth.initializeAuth()
 
@@ -46,14 +89,23 @@ function validate() {
   errors.email = ''
   errors.password = ''
   let ok = true
-  if (!state.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-    errors.email = 'Please enter a valid email'
+  
+  if (!state.email) {
+    errors.email = 'Email is required'
+    ok = false
+  } else if (!/\S+@\S+\.\S+/.test(state.email)) {
+    errors.email = 'Please enter a valid email address'
     ok = false
   }
-  if (!state.password || state.password.length < 6) {
+
+  if (!state.password) {
+    errors.password = 'Password is required'
+    ok = false
+  } else if (state.password.length < 6) {
     errors.password = 'Password must be at least 6 characters'
     ok = false
   }
+
   return ok
 }
 
@@ -63,12 +115,20 @@ async function onSubmit() {
     return
   }
 
-  const success = await auth.login(state.email, state.password)
-  if (success) {
-    toast.welcomeBack()
-    router.push('/dashboard')
-  } else {
-    toast.invalidCredentials()
+  isLoading.value = true
+
+  try {
+    const success = await auth.login(state.email, state.password)
+    if (success) {
+      toast.welcomeBack()
+      router.push('/dashboard')
+    } else {
+      toast.invalidCredentials()
+    }
+  } catch (error) {
+    toast.genericError()
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

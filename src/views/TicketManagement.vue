@@ -1,27 +1,39 @@
 <template>
-  <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Tickets</h1>
-      <router-link to="/tickets" class="bg-blue-600 text-white px-4 py-2 rounded">Create New Ticket</router-link>
-    </div>
+  <AppLayout>
+    <div class="w-full max-w-[1440px] mx-auto py-8">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold">Tickets</h1>
+        <Button>Create New Ticket</Button>
+      </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-      <div v-for="ticket in tickets" :key="ticket.id" class="p-4 bg-white rounded shadow">
-        <h3 class="text-lg font-semibold">{{ ticket.title }}</h3>
-        <p class="text-sm text-gray-600">{{ ticket.description }}</p>
-        <div class="mt-3 flex items-center gap-2">
-          <span class="text-sm px-2 py-1 bg-gray-100 rounded">{{ ticket.status }}</span>
-          <button @click="onDelete(ticket.id)" class="ml-auto text-sm text-red-600">Delete</button>
-        </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card v-for="ticket in tickets" :key="ticket.id" class="hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <CardTitle>{{ ticket.title }}</CardTitle>
+            <CardDescription>{{ ticket.description }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex items-center gap-2 mt-3">
+              <StatusBadge :status="ticket.status" />
+              <Button @click="onDelete(ticket.id)" variant="ghost" size="sm" class="ml-auto text-red-600">
+                Delete
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  </div>
+  </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useTicketsStore } from '@/stores/tickets'
 import { useToast } from '@/composables/useToast'
+import AppLayout from '@/components/layout/AppLayout.vue'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import StatusBadge from '@/components/ui/StatusBadge.vue'
 
 const ticketsStore = useTicketsStore()
 const toast = useToast()
