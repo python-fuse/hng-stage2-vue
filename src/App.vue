@@ -1,11 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Toaster } from '@/components/ui/sonner'
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div id="app">
+    <RouterView />
+    <Toaster />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+</style>
