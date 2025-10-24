@@ -23,7 +23,6 @@
                   : 'text-gray-700 hover:bg-gray-100',
               ]"
             >
-              <span class="text-xl">📊</span>
               <span>Dashboard</span>
             </router-link>
 
@@ -36,7 +35,6 @@
                   : 'text-gray-700 hover:bg-gray-100',
               ]"
             >
-              <span class="text-xl">🎫</span>
               <span>Tickets</span>
             </router-link>
           </nav>
