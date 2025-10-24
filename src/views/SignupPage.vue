@@ -33,9 +33,11 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const auth = useAuthStore()
+const toast = useToast()
 
 auth.initializeAuth()
 
@@ -64,16 +66,16 @@ function validate() {
 
 async function onSubmit() {
   if (!validate()) {
-    alert('Please fix the errors below')
+    toast.fixErrors()
     return
   }
 
   const success = await auth.signup(state.email, state.password, state.name)
   if (success) {
-    alert('Account created successfully! Welcome to Ticketly!')
+    toast.accountCreated()
     router.push('/dashboard')
   } else {
-    alert('An account with this email already exists. Please use a different email or try logging in.')
+    toast.emailExists()
   }
 }
 </script>

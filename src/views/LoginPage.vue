@@ -27,9 +27,11 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const auth = useAuthStore()
+const toast = useToast()
 
 auth.initializeAuth()
 
@@ -57,18 +59,16 @@ function validate() {
 
 async function onSubmit() {
   if (!validate()) {
-    // show generic toast equivalent
-    alert('Please fix the errors below')
+    toast.fixErrors()
     return
   }
 
   const success = await auth.login(state.email, state.password)
   if (success) {
-    alert('Welcome back to Ticketly!')
+    toast.welcomeBack()
     router.push('/dashboard')
   } else {
-    alert('Invalid email or password. Please check your credentials and try again.')
+    toast.invalidCredentials()
   }
 }
-// template uses state.* via v-model
 </script>

@@ -21,8 +21,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useTicketsStore } from '@/stores/tickets'
+import { useToast } from '@/composables/useToast'
 
 const ticketsStore = useTicketsStore()
+const toast = useToast()
 
 onMounted(() => {
   ticketsStore.loadTickets()
@@ -33,7 +35,7 @@ const tickets = ticketsStore.tickets
 function onDelete(id: string) {
   if (confirm('Are you sure you want to delete this ticket?')) {
     ticketsStore.deleteTicket(id)
-    alert('Ticket deleted successfully!')
+    toast.ticketDeleted()
   }
 }
 </script>
